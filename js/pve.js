@@ -962,13 +962,20 @@
     g.font = '800 36px ' + F;
     g.fillText((run.win ? '撑住了' : '被吞没') + '　·　' + run.lenTag + '局', W / 2, rowY + 158);
 
-    /* 底部：地址 + 免费声明 */
+    /* 底部：项目名、同人声明、AI 声明、B站号、署名 */
+    g.fillStyle = '#8fc6f0';
+    g.font = '800 30px ' + F;
+    g.fillText('星之翼小修女单排幸存者', W / 2, H - 210);
     g.fillStyle = '#8fa8c4';
-    g.font = '600 32px ' + F;
-    g.fillText('手机浏览器打开就玩，不用下载', W / 2, H - 132);
+    g.font = '600 24px ' + F;
+    g.fillText('本游戏为同人制作，免费游玩', W / 2, H - 172);
+    g.fillStyle = '#6f88a6';
+    g.fillText('全程 DeepSeek 驱动，有任何问题欢迎提出', W / 2, H - 134);
+    g.fillStyle = '#6fa9d8';
+    g.fillText('B站 @电子小修女', W / 2, H - 96);
     g.fillStyle = '#4f6a86';
-    g.font = '600 26px ' + F;
-    g.fillText(location.host || '星之翼同人', W / 2, H - 86);
+    g.font = '600 22px ' + F;
+    g.fillText('神秘团长制作 · 小修女代发', W / 2, H - 58);
 
     return c;
   }
@@ -1014,7 +1021,10 @@
     const r = lastRun;
     if (!r) return '';
     return '我在《' + GAME_TITLE + '》' + r.lenTag + '局撑了 ' + mmss(r.sec)
-      + '，击杀 ' + r.kills + '，得分 +' + r.gain + '。来试试：' + playUrl();
+      + '，击杀 ' + r.kills + '，得分 +' + r.gain + '。来试试：' + playUrl()
+      + '\n星之翼小修女单排幸存者 · 同人制作，免费游玩'
+      + '\n全程 DeepSeek 驱动，有任何问题欢迎提出'
+      + '\nB站 @电子小修女 · 神秘团长制作 · 小修女代发';
   }
 
   function copyRun() {
@@ -1153,7 +1163,7 @@
 
   /* 选人入口：走大厅的通用选人面板（不再用底部下注条的弹层） */
   P.choose = function () {
-    if (SW.Menu && SW.Menu.pickChar) SW.Menu.pickChar('小修女幸存者', id => P.start(id), '活到最后 · 只能选已解锁机体');
+    if (SW.Menu && SW.Menu.pickChar) SW.Menu.pickChar('小修女幸存者', id => P.start(id), '单排幸存者 · 只能选已解锁机体');
     else P.start();
   };
 

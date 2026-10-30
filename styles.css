@@ -429,6 +429,19 @@ body:not(.console-on) #homeForge{display:none}
 .home-wipe:hover{color:#ffc9d6;border-color:rgba(255,140,170,.55);background:rgba(60,18,32,.7)}
 .home-foot span{font-size:9.5px;color:#3f4d61;letter-spacing:.04em;text-align:center}
 
+/* 大厅底部署名：只做小字，不抢入口，也不冒充开发者 */
+.home-brand{
+  margin-top:12px;padding-top:10px;
+  border-top:1px solid rgba(90,130,180,.12);
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  text-align:center;
+}
+.hb-title{font-size:11px;font-weight:900;color:#8fc6f0;letter-spacing:.1em}
+.hb-slogan{font-size:9.5px;color:#526b88;letter-spacing:.12em}
+.hb-credit{font-size:9.5px;color:#3f5874;letter-spacing:.04em}
+.hb-credit a{color:#6fa9d8;text-decoration:none}
+.hb-credit a:hover{color:#bfe8ff}
+
 /* ---------- 面板（开一局 / 机体库 / 选人） ---------- */
 .sheet{
   position:fixed;inset:0;z-index:90;
@@ -931,6 +944,15 @@ body.pve-mode #betbar{display:none}
   border-color:rgba(140,200,255,.6);
 }
 .pve-actions button:hover{filter:brightness(1.15)}
+.pve-brand{
+  margin-top:10px;padding-top:8px;
+  border-top:1px solid rgba(90,130,180,.16);
+  display:flex;flex-direction:column;gap:2px;
+  font-size:9.5px;line-height:1.4;color:#4f6a86;letter-spacing:.03em;
+}
+.pve-brand a{color:#7fb6dd;text-decoration:none}
+.pve-brand a:hover{color:#bfe8ff}
+.pve-brand .pb-title{font-size:10.5px;font-weight:800;color:#7fb6dd;letter-spacing:.06em}
 
 .pick-title{
   padding:6px 8px 8px;font:700 12px "PingFang SC",sans-serif;
