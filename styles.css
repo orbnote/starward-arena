@@ -400,7 +400,9 @@ body:not(.console-on) .top-actions .mini:not(.keep){display:none}
 }
 .home-wallet b{font-size:23px;font-weight:900;color:var(--amber);text-shadow:0 0 12px rgba(255,194,74,.45)}
 .home-foot{display:flex;gap:7px;margin-top:14px}
-/* 大厅里的「数值 / 工坊」也是调试入口，跟顶栏一起收进控制台 */
+/* 大厅里的「数值 / 工坊」也是调试入口，跟顶栏一起收进控制台；
+   里面全隐藏时整行也别占位置 */
+body:not(.console-on) #homeDev{display:none}
 body:not(.console-on) #homeStats,
 body:not(.console-on) #homeForge{display:none}
 .home-mini{
