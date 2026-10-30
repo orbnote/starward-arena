@@ -46,10 +46,10 @@
   /* PvE 怪物立绘（克丽丝塔系四种，一开局就要画） */
   ['assets/krista_acolyte.webp', 'assets/krista_choir.webp',
    'assets/krista_blade.webp', 'assets/krista_cannon.webp'].forEach(pre);
-  /* 兵种立绘：小修女的八张表情包 + 蝙蝠自己那张（困倦蝠少女） */
+  /* 兵种立绘：小修女的八张表情包 + 蚊子位那张（蚊子小修女） */
   ['assets/em_pop.png', 'assets/em_yawn.png', 'assets/em_dumb.png', 'assets/em_grit.png',
    'assets/em_smirk.png', 'assets/em_sad.png', 'assets/em_hand.png', 'assets/em_work.png',
-   'assets/mob_bat.png'].forEach(pre);
+   'assets/mob_mosq.png'].forEach(pre);
 
   /* 首屏揭幕之后，趁着人在大厅把这些慢慢拉回来。
      一次全拉会和点按钮抢带宽，所以分小批，一批两张错开 160ms。 */

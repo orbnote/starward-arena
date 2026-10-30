@@ -260,8 +260,8 @@ window.SW = window.SW || {};
   const MOB_KIND = {
     /* art：这个兵种专属的立绘。文件还没有时会自动回落到共用立绘，
        所以把 GPT 生成的图按名字丢进 assets/ 就生效，不用改代码。 */
-    bat: { name: '蝙蝠', hp: 1, speed: 62, radius: 13, color: '#b98cff', xp: 1, dmg: 1,
-      art: 'assets/mob_bat.png', artScale: 2.2 },
+    bat: { name: '蚊子', hp: 1, speed: 62, radius: 13, color: '#b98cff', xp: 1, dmg: 1,
+      art: 'assets/mob_mosq.png', artScale: 2.2 },
     zombie: { name: '僵尸', hp: 3, speed: 42, radius: 18, color: '#7adf9c', xp: 1, dmg: 2,
       art: 'assets/em_yawn.png', artScale: 2.3 },
     skeleton: { name: '骷髅', hp: 5, speed: 80, radius: 15, color: '#ffd166', xp: 2, dmg: 3,
@@ -2897,7 +2897,7 @@ window.SW = window.SW || {};
       }
       for (let i = 0; i < n; i++) {
         let id = wave.k[Math.min(wave.k.length - 1, (U.rand(0, wave.k.length)) | 0)];
-        /* 抽到已经封顶的兵种就换一个，换不到就退回蝙蝠 */
+        /* 抽到已经封顶的兵种就换一个，换不到就退回蚊子 */
         for (let tries = 0; tries < 5; tries++) {
           const kk = MOB_KIND[id];
           if (!kk || !kk.maxAlive || (aliveBy[id] || 0) < kk.maxAlive) break;
