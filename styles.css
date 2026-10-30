@@ -329,14 +329,18 @@ body:not(.console-on) .top-actions .mini:not(.keep){display:none}
 /* ---------- 大厅 ---------- */
 .home{
   position:fixed;inset:0;z-index:80;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  /* 不能再用 align-items:center —— 内容一长，上下各溢出半截，
+     顶上那半截滚不回去，「星之翼」标题直接被切掉 */
+  align-items:flex-start;justify-content:center;
   overflow-y:auto;
   background:
     radial-gradient(80% 60% at 50% 26%, rgba(24,52,110,.55) 0%, rgba(3,5,12,.97) 70%),
     #04060d;
   padding:18px;
 }
-.home-card{width:min(430px,100%)}
+/* 上下 auto：空间够的时候仍然居中，不够的时候从顶部开始，正常往下滚 */
+.home-card{width:min(430px,100%);margin:auto 0}
 .home-tag{
   font-size:11px;letter-spacing:.34em;color:var(--cyan);
   margin-bottom:12px;opacity:.85;
@@ -446,6 +450,22 @@ body:not(.console-on) #homeForge{display:none}
 .hb-credit{font-size:9.5px;color:#3f5874;letter-spacing:.04em}
 .hb-credit a{color:#6fa9d8;text-decoration:none}
 .hb-credit a:hover{color:#bfe8ff}
+
+/* 创作声明：同人作品最容易被人拿去问「能不能商用」，写清楚省事 */
+.home-legal{
+  margin:14px auto 0;padding-top:11px;max-width:356px;
+  border-top:1px dashed rgba(90,130,180,.14);
+  text-align:left;
+}
+.home-legal b{
+  display:block;margin-bottom:7px;
+  font-size:10px;font-weight:900;color:#7c9cbc;letter-spacing:.26em;
+}
+.home-legal p{
+  margin:0 0 5px;
+  font-size:10.5px;line-height:1.8;color:#4d6a8c;letter-spacing:.02em;
+}
+.home-legal p:last-child{margin-bottom:0}
 
 /* ---------- 面板（开一局 / 机体库 / 选人） ---------- */
 .sheet{
