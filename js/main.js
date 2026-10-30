@@ -7,6 +7,30 @@
   try { SW.Debug.init(); } catch (e) {}
   try { SW.Console.init(); } catch (e) { SW.Debug.err(e); }
 
+  /* 真机浏览器（微信 / QQ 内核尤其明显）对 100dvh 算不准，
+     底部那排押注按钮会被地址栏或工具栏盖住。用 visualViewport 的
+     真实高度写进 --appH，布局就跟着可视区走，而不是跟着「理想视口」。 */
+  (function fitViewport() {
+    const apply = () => {
+      const vv = window.visualViewport;
+      const h = (vv && vv.height) || window.innerHeight || 0;
+      /* 太小说明是中间态（键盘弹出、旋转动画），忽略，别把布局压塌 */
+      if (h > 220) document.documentElement.style.setProperty('--appH', h + 'px');
+    };
+    apply();
+    let raf = 0;
+    const onResize = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = 0; apply(); });
+    };
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', onResize);
+      window.visualViewport.addEventListener('scroll', onResize);
+    }
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', () => setTimeout(apply, 150));
+  })();
+
   /* PWA：加到主屏后断网也能开。file:// 打开时不能注册（浏览器直接拒绝），
      所以本地双击调试不受影响 */
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {

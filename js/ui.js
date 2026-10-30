@@ -368,13 +368,15 @@ window.SW = window.SW || {};
     const cur = side === 0 ? D.selA : D.selB;
     pop.innerHTML = '';
     for (const c of D.chars) {
-      if (!D.isUnlocked(c.id)) continue;
+      /* 竞猜是纯观战，谁上场都能看，不受解锁限制；
+         未解锁的加个淡标记，让人知道回大厅还要花积分买 */
+      const locked = !D.isUnlocked(c.id);
       const d = document.createElement('div');
-      d.className = 'pick-item' + (c.id === cur ? ' sel' : '');
+      d.className = 'pick-item' + (c.id === cur ? ' sel' : '') + (locked ? ' locked' : '');
       const av = c.avatar ? `background-image:url('${c.avatar}');background-size:cover;background-position:center;` : '';
       d.innerHTML = `<span class="pi-dot" style="background-color:${c.color};color:${c.color};${av}"></span>
         <span class="pi-name">${escapeHtml(c.name)}</span>
-        ${c.builtin ? '' : '<span class="pi-tag">自定义</span>'}
+        ${locked ? '<span class="pi-tag">未解锁</span>' : (c.builtin ? '' : '<span class="pi-tag">自定义</span>')}
         <span class="pi-cost">COST ${c.cost}</span>`;
       d.addEventListener('click', () => {
         if (this.phase !== 'bet') { this.toast('本局进行中，结算后可换人'); return; }
@@ -386,17 +388,6 @@ window.SW = window.SW || {};
         A.ui();
       });
       pop.appendChild(d);
-    }
-    const locked = D.lockedList().length;
-    if (locked > 0) {
-      const more = document.createElement('div');
-      more.className = 'pick-more';
-      more.textContent = '还有 ' + locked + ' 台未解锁　→ 去机体库';
-      more.addEventListener('click', () => {
-        pop.classList.add('hidden');
-        if (SW.Menu) SW.Menu.openRoster();
-      });
-      pop.appendChild(more);
     }
     pop.classList.remove('hidden');
   };
