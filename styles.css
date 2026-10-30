@@ -178,8 +178,7 @@ body:not(.console-on) .top-actions .mini:not(.keep){display:none}
   flex:0 0 auto;
 }
 
-/* 窄屏放不下时宁可换行，也不能把「旁观」挤到屏幕外 */
-.chips-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chips-row{display:flex;align-items:center;gap:8px}
 .chip-group{display:flex;gap:5px;flex:0 0 auto}
 .chip{
   appearance:none;border:1px solid rgba(110,160,220,.25);
@@ -580,32 +579,11 @@ body.fight-mode .bet-row{display:none}
   .cp-name{font-size:14px}
   .bet-btn .bb-label{font-size:15px}
   .fg-grid.three{grid-template-columns:1fr 1fr 1fr}
-  /* 押注行：小屏上把每一项都收窄，不然「旁观」会被顶出屏幕 */
-  .chips-row{gap:6px}
-  .chip{padding:8px 9px;font-size:12px}
-  .chip-group{gap:4px}
-  .wallet span{font-size:20px}
-  .wallet i{font-size:11px}
-  .watch{padding:8px 10px;font-size:12px}
-  /* 角色卡：头像和间距一起缩，给名字留出四五个字的位置 */
-  .char-pick{padding:9px;gap:7px}
-  .cp-dot{width:25px;height:25px}
-  .cp-cost{padding:2px 5px;font-size:12.5px}
-}
-/* 360 这类窄屏：角色卡只剩 145px，再收一档才放得下四字名字 */
-@media (max-width:380px){
-  .cp-name{font-size:13px}
-  .cp-dot{width:23px;height:23px}
-  .char-pick{padding:8px;gap:6px}
-}
-@media (max-width:340px){
-  .cp-name{font-size:12px}
-  .cp-cost{font-size:11.5px;padding:1px 4px}
-  .watch{margin-left:auto}
 }
 @media (max-height:660px){
   #topbar{height:calc(48px + env(safe-area-inset-top))}
-  .home-card h1{font-size:36px}  .home-tabs{margin:16px 0 10px;gap:7px}
+  .home-card h1{font-size:36px}
+  .home-tabs{margin:16px 0 10px;gap:7px}
   .home-tab{padding:10px 12px 10px 14px}
 }
 
