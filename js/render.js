@@ -26,6 +26,18 @@ window.SW = window.SW || {};
     window.addEventListener('resize', () => this.resize());
   };
 
+  /* 舞台自己会变高变矮（下注条随系统字体换行、地址栏收起、键盘弹出），
+     这些都不会触发 window.resize。画布是写死的 px 尺寸，不重新量就会
+     比舞台高出一截，多出来的那截被 #stage 的 overflow:hidden 切掉 ——
+     看上去就是底部的技能字幕被下注条压住了。所以每次变化都对比一次。 */
+  R.fit = function () {
+    if (!this.cv) return false;
+    const rect = this.cv.parentElement.getBoundingClientRect();
+    if (Math.abs(rect.width - this.W) < 0.5 && Math.abs(rect.height - this.H) < 0.5) return false;
+    this.resize();
+    return true;
+  };
+
   R.resize = function () {
     if (!this.cv) return;
     const rect = this.cv.parentElement.getBoundingClientRect();
@@ -4643,7 +4655,13 @@ window.SW = window.SW || {};
     ctx.textBaseline = 'middle';
     try { ctx.letterSpacing = '6px'; } catch (e) { /* 旧浏览器忽略 */ }
 
-    const fs = Math.round(bh * (cfg.cutinScale != null ? cfg.cutinScale : 0.62));
+    /* 字号按光带高度算，但竖屏高的手机上场地底下的空隙特别大，
+       字会一路撑到画面外面去。按实际宽度压一道上限。 */
+    let fs = Math.round(bh * (cfg.cutinScale != null ? cfg.cutinScale : 0.62));
+    const maxTW = W * 0.84;
+    ctx.font = `900 ${fs}px "PingFang SC","Microsoft YaHei",sans-serif`;
+    const tw = ctx.measureText(c.text).width;
+    if (tw > maxTW) fs = Math.max(10, Math.floor(fs * maxTW / tw));
     ctx.save();
     ctx.translate(W / 2 + sx, cy + bh * 0.13);
     ctx.transform(1, 0, -0.13, 1, 0, 0);          /* 轻微斜体 */

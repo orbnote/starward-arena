@@ -194,6 +194,26 @@
     }, 120);
   });
 
+  /* 窗口没动、舞台自己变了的情况：下注条里的字在安卓上没有 PingFang，
+     回退字体宽一点，档位那一行会折成两行，下注条就高出三四十像素。
+     画布还是原来的 px 高度，底下多出来那截会被 #stage 裁掉，正好是
+     技能字幕待的地方。盯住舞台本身，尺寸一变就重新量。 */
+  if (window.ResizeObserver) {
+    const stage = document.getElementById('stage');
+    if (stage) {
+      let raf = 0;
+      new ResizeObserver(() => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          try {
+            if (R.fit() && B.state === 'idle') UI.prepareIdle();
+          } catch (e) { SW.Debug.err(e); }
+        });
+      }).observe(stage);
+    }
+  }
+
   let last = performance.now();
   let errShown = 0;
 
