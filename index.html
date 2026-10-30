@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>星之翼 · 小修女幸存者</title>
+<meta name="description" content="星之翼同人游戏，小修女幸存者。手机浏览器打开就玩，一台机体撑到最后，还能押注 1v1 对局。不用下载，免费。">
+<meta name="keywords" content="星之翼,同人游戏,幸存者,小修女,弹幕,手机游戏,网页游戏">
+<meta name="author" content="星之翼同人">
+
+<!-- 分享卡片：B 站 / 微信 / QQ 抓这几个 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="星之翼">
+<meta property="og:title" content="星之翼 · 小修女幸存者">
+<meta property="og:description" content="一台机体，一群修女，活到最后。手机浏览器打开就玩，不用下载。">
+<!-- TODO 部署到 GitHub Pages 后，把下面两个改成完整地址，微信才认 -->
+<meta property="og:image" content="assets/og_cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="星之翼 · 小修女幸存者">
+<meta name="twitter:description" content="一台机体，一群修女，活到最后。手机浏览器打开就玩。">
+<meta name="twitter:image" content="assets/og_cover.jpg">
+
+<link rel="icon" href="assets/icon/favicon-32.png" sizes="32x32">
+<link rel="icon" href="assets/icon/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#060a14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="星之翼">
+<link rel="stylesheet" href="styles.css?v=131">
+</head>
+<body>
+
+<!-- 首屏：图没到齐之前先盖着，不要让人对着黑屏猜 -->
+<div id="boot">
+  <div class="boot-mark"><span></span></div>
+  <div class="boot-name">星之翼</div>
+  <div class="boot-sub">球体竞技场</div>
+  <div class="boot-track"><i id="bootBar"></i></div>
+  <div class="boot-pct" id="bootPct">0%</div>
+</div>
+
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-glyph"></span>
+      <span class="brand-text">星之翼<em>球体竞技场</em></span>
+    </div>
+    <div class="top-actions" id="topActions">
+      <button class="mini keep" id="btnHome">大厅</button>
+      <button class="mini" id="pveSwitch">幸存者</button>
+      <button class="mini" id="btnStats">数值</button>
+      <button class="mini" id="btnEditor">工坊</button>
+      <button class="mini" id="btnSpeed">1×</button>
+      <button class="mini" id="btnMute">音效</button>
+      <button class="mini" id="btnReset">重置</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <aside id="sideL">
+      <div class="char-card" id="cardA"></div>
+      <div class="char-card" id="cardB"></div>
+    </aside>
+
+    <div id="stage">
+      <canvas id="cv"></canvas>
+      <div id="banner" class="banner hidden"></div>
+      <div id="result" class="result hidden"></div>
+    </div>
+
+    <aside id="sideR">
+      <div class="side-title">战 况</div>
+      <div id="logList"></div>
+    </aside>
+  </main>
+
+  <footer id="betbar">
+    <div id="pickPop" class="pick-pop hidden"></div>
+    <div class="vs-row">
+      <button class="char-pick" id="pickA" data-side="0">
+        <span class="cp-dot"></span>
+        <span class="cp-name">苍穹之剑</span>
+        <span class="cp-cost">2.5</span>
+      </button>
+      <span class="vs-mark">VS</span>
+      <button class="char-pick" id="pickB" data-side="1">
+        <span class="cp-dot"></span>
+        <span class="cp-name">秋云</span>
+        <span class="cp-cost">3.0</span>
+      </button>
+    </div>
+
+    <div class="chips-row">
+      <div class="chip-group" id="chipGroup">
+        <button class="chip active" data-amt="50">50</button>
+        <button class="chip" data-amt="100">100</button>
+        <button class="chip" data-amt="500">500</button>
+        <button class="chip" data-amt="max">MAX</button>
+      </div>
+      <div class="wallet"><span id="walletNum">1000</span><i>积分</i></div>
+      <button class="watch" id="btnWatch">旁观</button>
+    </div>
+
+    <div class="bet-row">
+      <button class="bet-btn bet-a" id="btnBetA">
+        <span class="bb-label">竞猜左</span>
+        <b class="bb-odds">1.90×</b>
+      </button>
+      <button class="bet-btn bet-b" id="btnBetB">
+        <span class="bb-label">竞猜右</span>
+        <b class="bb-odds">1.90×</b>
+      </button>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================ 大厅 ============================ -->
+<div id="home" class="home">
+  <div class="home-card">
+    <div class="home-tag">STARWARD · ORB ARENA</div>
+    <h1>星之翼</h1>
+    <div class="home-sub">球 体 竞 技 场</div>
+
+    <nav class="home-tabs">
+      <button class="home-tab t-vs" data-tab="pve">
+        <b class="ht-no">01</b>
+        <span class="ht-body">
+          <span class="ht-name">开一局 小修女幸存者</span>
+          <span class="ht-desc">幸存者玩法，一台机体活到最后</span>
+        </span>
+        <span class="ht-go">▶</span>
+      </button>
+      <button class="home-tab t-unlock" data-tab="unlock">
+        <b class="ht-no">02</b>
+        <span class="ht-body">
+          <span class="ht-name">小修女幸存者解锁新角色</span>
+          <span class="ht-desc">积分换机体，还剩 <em id="homeLocked">7</em> 台锁着</span>
+        </span>
+        <span class="ht-go">▶</span>
+      </button>
+      <button class="home-tab t-bet" data-tab="bet">
+        <b class="ht-no">03</b>
+        <span class="ht-body">
+          <span class="ht-name">竞猜赚积分</span>
+          <span class="ht-desc">押一边，赢了翻倍，输了赔掉押的那份</span>
+        </span>
+        <span class="ht-go">▶</span>
+      </button>
+    </nav>
+
+    <!-- 局时长：先让人三分钟看到结果，愿意留下再玩长的 -->
+    <div class="home-lens" id="homeLens">
+      <span class="hl-label">局时长</span>
+      <button class="hl-chip" data-sec="180">试玩 3 分钟</button>
+      <button class="hl-chip on" data-sec="600">标准 10 分钟</button>
+      <button class="hl-chip" data-sec="1800">完整 30 分钟</button>
+    </div>
+
+    <div class="home-wallet"><i>积分</i><b id="homeWallet">1000</b></div>
+
+    <div class="home-foot">
+      <button id="homeVersus" class="home-mini">1v1 对战</button>
+      <button id="homeStats" class="home-mini">数值</button>
+      <button id="homeForge" class="home-mini">工坊</button>
+    </div>
+    <p class="home-tip">1v1 对战在下面，两台机器自己打，你只押注</p>
+    <div class="home-foot">
+      <button id="homeWipe" class="home-wipe">清空存档</button>
+      <span>积分、解锁、自定义机体一起清掉，回到刚开服的样子</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ 开一局 1v1 ============================ -->
+<div id="launch" class="sheet hidden">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div class="sheet-title">1v1 对战<i>选择左右机体，纯观战</i></div>
+      <div class="spacer"></div>
+      <button class="sheet-close" data-close="launch">关闭</button>
+    </div>
+    <div class="launch-sides">
+      <button class="ls-side a" id="lsA">
+        <span class="ls-dot"></span>
+        <span class="ls-name">苍穹之剑</span>
+      </button>
+      <span class="vs-mark">VS</span>
+      <button class="ls-side b" id="lsB">
+        <span class="ls-dot"></span>
+        <span class="ls-name">秋云</span>
+      </button>
+    </div>
+    <div class="sheet-hint">点击下方机体，换到选中的一侧</div>
+    <div class="launch-grid" id="launchGrid"></div>
+    <button class="launch-go" id="launchGo">开 战</button>
+  </div>
+</div>
+
+<!-- ============================ 机体库 / 解锁 ============================ -->
+<div id="roster" class="sheet hidden">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div class="sheet-title">机体库<i>积分解锁 · 幸存者与 1v1 通用</i></div>
+      <div class="spacer"></div>
+      <button class="sheet-close" data-close="roster">关闭</button>
+    </div>
+    <div class="roster-wallet">持有积分 <b id="rosterWallet">1000</b><em>赢一局竞猜最快</em></div>
+    <div class="roster-grid" id="rosterGrid"></div>
+  </div>
+</div>
+
+<!-- ============================ 通用选人（生存模式） ============================ -->
+<div id="charPick" class="sheet hidden">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div class="sheet-title" id="charPickTitle">选择机体<i></i></div>
+      <div class="spacer"></div>
+      <button class="sheet-close" data-close="charPick">关闭</button>
+    </div>
+    <div class="roster-grid" id="charPickGrid"></div>
+  </div>
+</div>
+
+<div id="modal" class="modal hidden"></div>
+
+<!-- PvE 生存模式 HUD -->
+<div id="pveHud" class="pve-hud hidden">
+  <div class="pve-top">
+    <span class="pve-time" id="pveTime">30:00</span>
+    <span class="pve-kill"><b id="pveKills">0</b> 击杀</span>
+  </div>
+  <div class="pve-hprow">
+    <div class="pve-hp"><i id="pveHpBar"></i></div>
+    <span class="pve-hptxt" id="pveHpTxt">100</span>
+    <span class="pve-dash" id="pveDash">冲</span>
+  </div>
+  <div class="pve-xprow">
+    <span class="pve-lvl" id="pveLvl">Lv.1</span>
+    <div class="pve-xp">
+      <i id="pveXpBar"></i>
+      <u class="sx" style="left:33.333%"></u>
+      <u class="sx last" style="left:66.666%"></u>
+    </div>
+    <span class="pve-seg" id="pveSegTxt">1/3</span>
+  </div>
+  <div class="pve-awrow" id="pveAwRow">
+    <span class="pve-awtag">觉</span>
+    <div class="pve-aw"><i id="pveAwBar"></i></div>
+    <span class="pve-awtxt" id="pveAwTxt"></span>
+  </div>
+  <!-- 莱茵专用：进化条 -->
+  <div class="pve-evrow hidden" id="pveEvoRow">
+    <span class="pve-evtag">进</span>
+    <div class="pve-ev"><i id="pveEvoBar"></i></div>
+    <span class="pve-evTxt" id="pveEvoTxt">0/7</span>
+  </div>
+  <!-- 已获得的角色 / 觉醒：头像 · 名字 · 介绍 · 等级 -->
+  <div class="pve-build" id="pveBuild"></div>
+</div>
+<div id="pveStick" class="pve-stick hidden"><i></i></div>
+<!-- 独立闪避键：摇杆在左、闪避在右，右手拇指不用离开屏幕去双击 -->
+<button id="pveDashBtn" class="pve-dash-btn hidden" aria-label="闪避">
+  <i class="pg"></i>
+  <b>闪</b>
+</button>
+<div id="pveTip" class="pve-tip hidden"></div>
+<!-- 首局指引：只指摇杆和闪避键两处，升级卡自己看得出来 -->
+<div id="pveCoach" class="pve-coach hidden">
+  <div class="pc-bubble">
+    <span id="pcText"></span>
+    <button id="pcNext">知道了</button>
+  </div>
+</div>
+<button id="pveExit" class="pve-exit hidden">退出</button>
+<button id="pvePause" class="pve-exit pve-pausebtn hidden">暂停</button>
+<button id="pveEvoBtn" class="pve-exit pve-evobtn hidden">图鉴</button>
+<div id="pvePauseMask" class="hidden"><b>已暂停</b><span>点「继续」回到战场</span></div>
+
+<!-- 进化图鉴 / 图鉴：角色满级 + 对应觉醒 = 进化 -->
+<div id="evoBook" class="sheet hidden">
+  <div class="sheet-card codex-card">
+    <div class="sheet-head">
+      <div class="sheet-title">图鉴<i>角色 · 星导核心 · 进化 · 敌人</i></div>
+      <div class="spacer"></div>
+      <button class="sheet-close" id="evoBookClose">关闭</button>
+    </div>
+    <div class="codex-tabs" id="codexTabs">
+      <button class="codex-tab active" data-tab="evo">进化</button>
+      <button class="codex-tab" data-tab="weapon">角色技能</button>
+      <button class="codex-tab" data-tab="passive">星导核心</button>
+      <button class="codex-tab" data-tab="mob">敌人</button>
+    </div>
+    <div class="evo-list" id="evoList"></div>
+  </div>
+</div>
+
+<div id="pveUp" class="pve-up hidden">
+  <div class="pve-up-panel">
+    <div class="pve-up-head">
+      <span class="pu-title">LEVEL UP</span>
+      <span class="pu-lv">Lv.<b id="pveUpLvl">2</b></span>
+    </div>
+    <div class="pve-up-list" id="pveUpList"></div>
+  </div>
+</div>
+
+<div id="pveIntro" class="pve-intro hidden">
+  <div class="pvi-panel">
+    <div class="pvi-head">
+      <span class="pvi-title">开打之前</span>
+      <span class="pvi-sub">三句话，之后不再弹</span>
+    </div>
+    <ol class="pvi-list">
+      <li><b>只管走位，冲刺保命</b>
+        <span>开火、放技能全自动，你手上只有移动和冲刺。被围住就是唯一的死法。</span>
+        <span class="pvi-key">冲刺：手机按右下角「闪」或双击屏幕，电脑空格 / Shift。
+          冲出去的那一下无敌，冷却 1.3 秒，专用来穿出包围圈。</span></li>
+      <li><b>升级三选一</b>
+        <span>打怪掉经验，升级时会停一下让你挑：角色、星导核心、补给，三选一。</span>
+        <span class="pvi-key">觉醒是自动的，能量攒满就放，不用按。</span></li>
+      <li><b>角色满级 ＋ 对应核心 ＝ 进化</b>
+        <span>角色到 5 级、手里正好有它那件核心，就自己进化，不用点按钮。
+          左下「图鉴」里列了全部八组。</span></li>
+    </ol>
+    <button id="pviGo" class="pvi-go">开始</button>
+  </div>
+</div>
+
+<div id="pveResult" class="pve-result hidden">
+  <h3 id="pveResultTitle">撑住了</h3>
+  <p id="pveResultBody"></p>
+  <div class="pve-share">
+    <button id="pveShare">晒 战 绩</button>
+    <button id="pveCopy" class="ghost">复制战绩</button>
+  </div>
+  <div class="pve-actions">
+    <button id="pveAgain">再来一局</button>
+    <button id="pveQuit">返回大厅</button>
+  </div>
+</div>
+
+<script src="js/crash.js?v=131"></script>
+<script src="js/core.js?v=131"></script>
+<script src="js/data.js?v=131"></script>
+<script src="js/engine.js?v=131"></script>
+<script src="js/render.js?v=131"></script>
+<script src="js/editor.js?v=131"></script>
+<script src="js/ui.js?v=131"></script>
+<script src="js/menu.js?v=131"></script>
+<script src="js/debug.js?v=131"></script>
+<script src="js/console.js?v=131"></script>
+<script src="js/pve.js?v=131"></script>
+<script src="js/main.js?v=131"></script>
+</body>
+</html>
