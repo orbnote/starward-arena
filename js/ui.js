@@ -384,6 +384,8 @@ window.SW = window.SW || {};
         D.save();
         pop.classList.add('hidden');
         this.syncPicks();
+        /* 换人必须跟着换赔率：赔率是查对位表的，不重查就一直是上一对的数字 */
+        this.syncBetLabels();
         this.prepareIdle();
         A.ui();
       });
